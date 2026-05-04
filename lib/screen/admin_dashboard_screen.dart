@@ -1,63 +1,83 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'login_screen.dart';
+import 'admin_manage_rooms_screen.dart';
+import 'admin_bookings_report_screen.dart';
+import 'admin_financial_screen.dart';
+import 'admin_user_management_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
+  const AdminDashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6F9),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Admin Jaykos", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFF007bff),
+        title: const Text("Admin SobatKos", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          IconButton(icon: const Icon(Icons.settings, color: Colors.white), onPressed: () {}),
-        ],
+        centerTitle: true,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                 CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Color(0xFF007bff),
-                  child: Icon(Icons.admin_panel_settings, color: Colors.white),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: [Color(0xFFDAA520), Color(0xFFDEB887)]),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.black,
+                    child: Icon(Icons.admin_panel_settings, color: Color(0xFFDAA520), size: 30),
+                  ),
                 ),
-                SizedBox(width: 15),
-                Column(
+                const SizedBox(width: 20),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Selamat Datang,", style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    Text("Super Admin!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    Text("Selamat Datang,", style: TextStyle(fontSize: 14, color: Colors.white70)),
+                    Text("Super Admin!", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 35),
             
             // Statistics Cards
             Row(
               children: [
-                Expanded(child: _statCard("Total Kamar", "12", Icons.meeting_room, Colors.blue)),
+                Expanded(child: _statCard("Total Kamar", "12", Icons.meeting_room, const Color(0xFFDAA520))),
                 const SizedBox(width: 15),
-                Expanded(child: _statCard("Booking Baru", "5", Icons.notifications_active, Colors.orange)),
+                Expanded(child: _statCard("Booking Baru", "5", Icons.notifications_active, const Color(0xFFDEB887))),
               ],
             ),
             const SizedBox(height: 15),
             Row(
               children: [
-                Expanded(child: _statCard("Lunas", "8", Icons.check_circle, Colors.green)),
+                Expanded(child: _statCard("Lunas", "8", Icons.check_circle, const Color(0xFFDAA520))),
                 const SizedBox(width: 15),
-                Expanded(child: _statCard("Total Laporan", "24", Icons.description, Colors.purple)),
+                Expanded(child: _statCard("Total Laporan", "24", Icons.description, const Color(0xFFDEB887))),
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 35),
             
             const Text(
-              "Menu Utama",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              "Menu Utama Admin",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 20),
             
@@ -69,12 +89,25 @@ class AdminDashboard extends StatelessWidget {
               mainAxisSpacing: 15,
               childAspectRatio: 1.1,
               children: [
-                _adminMenu(Icons.meeting_room, "Kelola Kamar", "Update data kamar", Colors.blue),
-                _adminMenu(Icons.book_online, "Data Booking", "Cek pesanan user", Colors.green),
-                _adminMenu(Icons.bar_chart, "Laporan Keuangan", "Statistik bulanan", Colors.orange),
-                _adminMenu(Icons.people, "Data User", "Kelola pelanggan", Colors.teal),
-                _adminMenu(Icons.support_agent, "Bantuan", "Hubungi pengembang", Colors.indigo),
-                _adminMenu(Icons.logout, "Logout", "Keluar aplikasi", Colors.red),
+                _adminMenu(Icons.meeting_room, "Kelola Kamar", "Update data kamar", const Color(0xFFDAA520), () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminManageRoomsScreen()));
+                }),
+                _adminMenu(Icons.book_online, "Data Booking", "Cek pesanan user", const Color(0xFFDEB887), () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminBookingsReportScreen()));
+                }),
+                _adminMenu(Icons.bar_chart, "Keuangan", "Statistik bulanan", const Color(0xFFDAA520), () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminFinancialScreen()));
+                }),
+                _adminMenu(Icons.people, "Data User", "Kelola pelanggan", const Color(0xFFDEB887), () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminUserManagementScreen()));
+                }),
+                _adminMenu(Icons.logout, "Keluar", "Logout aplikasi", const Color(0xFFEF4444), () {
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    (route) => false,
+                  );
+                }),
               ],
             ),
             const SizedBox(height: 30),
@@ -84,14 +117,21 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 
+
+
   Widget _statCard(String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 5)),
+          BoxShadow(
+            color: color.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
         ],
       ),
       child: Column(
@@ -99,31 +139,31 @@ class AdminDashboard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
             child: Icon(icon, color: color, size: 20),
           ),
           const SizedBox(height: 15),
-          Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text(title, style: const TextStyle(fontSize: 12, color: Colors.white60)),
         ],
       ),
     );
   }
 
-  Widget _adminMenu(IconData icon, String title, String subtitle, Color color) {
+  Widget _adminMenu(IconData icon, String title, String subtitle, Color color, VoidCallback onTap) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 15, offset: const Offset(0, 8)),
-        ],
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () {},
+          onTap: onTap,
+          splashColor: color.withOpacity(0.1),
+          highlightColor: color.withOpacity(0.05),
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
@@ -133,13 +173,13 @@ class AdminDashboard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  style: const TextStyle(fontSize: 10, color: Colors.white54),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -150,3 +190,4 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 }
+

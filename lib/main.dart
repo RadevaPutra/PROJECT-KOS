@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'screen/home_screen.dart';
 import 'screen/login_screen.dart';
+import 'widgets/animated_modern_background.dart';
+import 'screen/profile_menus_screen.dart';
 
-void main() => runApp(const JaykosApp());
+void main() => runApp(const SobatKosApp());
 
-class JaykosApp extends StatelessWidget {
-  const JaykosApp({super.key});
+class SobatKosApp extends StatelessWidget {
+  const SobatKosApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Jaykos Room Booking',
+      title: 'SobatKos',
       theme: ThemeData(
-        primaryColor: const Color(0xFFFF8C00), // Warna Orange Jaykos
+        primaryColor: const Color(0xFFDAA520), // Goldenrod
+        scaffoldBackgroundColor: Colors.transparent, 
         visualDensity: VisualDensity.adaptivePlatformDensity,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF8C00),
-          primary: const Color(0xFFFF8C00),
-          secondary: const Color(0xFF007BFF),
+          seedColor: const Color(0xFFDAA520),
+          primary: const Color(0xFFDAA520),
+          secondary: const Color(0xFFDEB887),
         ),
         fontFamily: 'Segoe UI',
         useMaterial3: true,
       ),
-      home: const MainNavigation(), // Kita mulai dari Navigasi Utama
+      builder: (context, child) {
+        return AnimatedModernBackground(child: child);
+      },
+      home: const MainNavigation(isLoggedIn: false), // Default not logged in
     );
   }
 }
 
 // --- NAVIGASI UTAMA ---
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  final bool isLoggedIn;
+  const MainNavigation({super.key, this.isLoggedIn = false});
 
   @override
   _MainNavigationState createState() => _MainNavigationState();
@@ -39,34 +47,66 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
-  // Daftar halaman yang akan ditampilkan
-  final List<Widget> _pages = [
-    HomeScreenContent(),
-    FavoriteScreen(),
-    HistoryScreen(),
-    ProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    if (!widget.isLoggedIn) {
+      // If not logged in, just show HomeScreen without bottom navigation
+      return Scaffold(
+        body: HomeScreenContent(isLoggedIn: false),
+      );
+    }
+
+    final List<Widget> pages = [
+      HomeScreenContent(isLoggedIn: true),
+      const FavoriteScreen(),
+      const HistoryScreen(),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFFFF8C00),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorit'),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
+      extendBody: true, // Allow body to flow under the floating navbar
+      body: pages[_currentIndex],
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF1E293B), Color(0xFF0F172A)], // Premium dark slate gradient
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFDAA520).withOpacity(0.3), // Gold shadow glow
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            backgroundColor: Colors.transparent,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: const Color(0xFFDEB887), // BurlyWood
+            unselectedItemColor: Colors.white54,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            elevation: 0,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Beranda'),
+              BottomNavigationBarItem(icon: Icon(Icons.favorite_rounded), label: 'Favorit'),
+              BottomNavigationBarItem(icon: Icon(Icons.history_rounded), label: 'Riwayat'),
+              BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Profil'),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -76,7 +116,6 @@ class _MainNavigationState extends State<MainNavigation> {
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
 
-  // Contoh data yang sudah difavoritkan
   static final List<Map<String, String>> favRooms = [
     {"name": "Kamar 01", "price": "1.500.000", "img": "assets/images/kamar_1.jpg"},
   ];
@@ -84,10 +123,13 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Koleksi Favorit", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text("Koleksi Favorit", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: favRooms.isEmpty
           ? _buildEmptyState()
@@ -106,7 +148,7 @@ class FavoriteScreen extends StatelessWidget {
         children: [
           Icon(Icons.favorite_outline, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 10),
-          const Text("Belum ada kamar favorit", style: TextStyle(color: Colors.grey)),
+          const Text("Belum ada kamar favorit", style: TextStyle(color: Colors.white70)),
         ],
       ),
     );
@@ -116,22 +158,26 @@ class FavoriteScreen extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
+      elevation: 4,
+      shadowColor: Colors.black.withOpacity(0.2),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(10),
+        contentPadding: const EdgeInsets.all(12),
         leading: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           child: Image.asset(
             item['img']!,
-            width: 60,
-            height: 60,
+            width: 65,
+            height: 65,
             fit: BoxFit.cover,
-            errorBuilder: (c, e, s) => Container(width: 60, height: 60, color: Colors.grey[200]),
+            errorBuilder: (c, e, s) => Container(width: 65, height: 65, color: Colors.grey[200]),
           ),
         ),
-        title: Text(item['name']!, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text("Rp ${item['price']}", style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500)),
-        trailing: const Icon(Icons.favorite, color: Colors.red),
+        title: Text(item['name']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: Text("Rp ${item['price']}", style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.bold)),
+        ),
+        trailing: const Icon(Icons.favorite, color: Colors.redAccent, size: 28),
       ),
     );
   }
@@ -160,7 +206,6 @@ class TransactionModel {
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
 
-  // Data ini nantinya bisa diisi dari database atau shared_preferences
   static final List<TransactionModel> transactions = [
     TransactionModel(
       roomName: "Kamar 01",
@@ -168,7 +213,7 @@ class HistoryScreen extends StatelessWidget {
       amount: "1.500.000",
       method: "GoPay",
       status: "Berhasil",
-      statusColor: Colors.green,
+      statusColor: const Color(0xFF10B981), // Emerald
     ),
     TransactionModel(
       roomName: "Kamar 03",
@@ -176,14 +221,14 @@ class HistoryScreen extends StatelessWidget {
       amount: "300.000",
       method: "Bank BCA (DP)",
       status: "Menunggu",
-      statusColor: Colors.orange,
+      statusColor: const Color(0xFFF59E0B), // Amber
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Dark mode background
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text("Riwayat Booking", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
@@ -196,9 +241,10 @@ class HistoryScreen extends StatelessWidget {
           _buildSummaryHeader(),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1), // Glassy background
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
               child: ListView.builder(
                 padding: const EdgeInsets.all(25),
@@ -231,8 +277,9 @@ class HistoryScreen extends StatelessWidget {
   Widget _statTile(String label, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+        Text(value, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13)),
       ],
     );
   }
@@ -253,19 +300,18 @@ class HistoryScreen extends StatelessWidget {
               ),
             ),
             if (!isLast)
-              Container(width: 2, height: 80, color: Colors.grey.shade200),
+              Container(width: 2, height: 80, color: Colors.white24),
           ],
         ),
         const SizedBox(width: 20),
         Expanded(
           child: Container(
             margin: const EdgeInsets.only(bottom: 25),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-              border: Border.all(color: Colors.grey.shade100),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15, offset: const Offset(0, 5))],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,24 +320,27 @@ class HistoryScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(data.roomName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text("Rp ${data.amount}", style: const TextStyle(color: Color(0xFFFF8C00), fontWeight: FontWeight.bold)),
+                    Text("Rp ${data.amount}", style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.bold)),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Text(data.date, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                const Divider(height: 24),
+                const SizedBox(height: 6),
+                Text(data.date, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Divider(height: 1),
+                ),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: data.statusColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(data.status, style: TextStyle(color: data.statusColor, fontSize: 11, fontWeight: FontWeight.bold)),
+                      child: Text(data.status, style: TextStyle(color: data.statusColor, fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
                     const Spacer(),
-                    Text(data.method, style: const TextStyle(fontSize: 12, color: Colors.blueGrey)),
+                    Text(data.method, style: const TextStyle(fontSize: 13, color: Colors.blueGrey, fontWeight: FontWeight.w500)),
                   ],
                 )
               ],
@@ -310,10 +359,10 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
-          // Header Profil dengan Gradasi
+          // Header Profil dengan Gradasi Modern Blue
           Container(
             height: 280,
             width: double.infinity,
@@ -321,10 +370,10 @@ class ProfileScreen extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFFF8C00), Color(0xFFFF4500)],
+                colors: [Color(0xFFDAA520), Color(0xFFDEB887)], // Goldenrod to BurlyWood
               ),
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 15, offset: Offset(0, 5))],
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(35)),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15, offset: Offset(0, 8))],
             ),
             child: SafeArea(
               child: Column(
@@ -335,41 +384,53 @@ class ProfileScreen extends StatelessWidget {
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       radius: 52,
-                      backgroundImage: AssetImage('assets/avatar.jpg'), // Pastikan file ini ada
+                      backgroundImage: AssetImage('assets/images/kamar_1.jpg'), // Fallback placeholder
                       backgroundColor: Colors.grey,
                     ),
                   ),
                   SizedBox(height: 15),
                   Text(
-                    "Gde Radeva",
+                    "SobatKos User",
                     style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Student @ Telkom University",
+                    "Modern Living Experience",
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _profileMenu(Icons.person_outline, "Informasi Pribadi"),
-                _profileMenu(Icons.security, "Keamanan & Password"),
-                _profileMenu(Icons.notifications_none, "Notifikasi"),
-                _profileMenu(Icons.help_center_outlined, "Bantuan"),
-                const Divider(indent: 20, endIndent: 20),
+                _profileMenu(Icons.person_outline, "Informasi Pribadi", onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PersonalInfoScreen()));
+                }),
+                _profileMenu(Icons.security, "Keamanan & Password", onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SecurityScreen()));
+                }),
+                _profileMenu(Icons.notifications_none, "Notifikasi", onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationSettingsScreen()));
+                }),
+                _profileMenu(Icons.help_center_outlined, "Bantuan", onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const HelpCenterScreen()));
+                }),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Divider(indent: 20, endIndent: 20, color: Colors.black12),
+                ),
                 _profileMenu(
                   Icons.logout, 
                   "Keluar", 
-                  color: Colors.red,
+                  color: const Color(0xFFEF4444), // Red-500
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.pushAndRemoveUntil(
                       context, 
-                      MaterialPageRoute(builder: (context) => const LoginPage())
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      (route) => false,
                     );
                   }
                 ),
@@ -381,16 +442,19 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _profileMenu(IconData icon, String title, {Color color = Colors.black87, VoidCallback? onTap}) {
+  Widget _profileMenu(IconData icon, String title, {Color color = const Color(0xFF1E293B), VoidCallback? onTap}) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
       leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(10)),
-        child: Icon(icon, color: color, size: 22),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.08), 
+          borderRadius: BorderRadius.circular(12)
+        ),
+        child: Icon(icon, color: color, size: 24),
       ),
-      title: Text(title, style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 16)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+      title: Text(title, style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 16)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white54),
       onTap: onTap ?? () {},
     );
   }

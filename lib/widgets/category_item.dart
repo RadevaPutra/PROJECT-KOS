@@ -28,20 +28,20 @@ class _CategoryItemState extends State<CategoryItem> {
             height: 60,
             width: 60,
             decoration: BoxDecoration(
-              color: _isPressed ? Colors.grey[200] : Colors.white,
+              color: _isPressed ? Colors.white.withOpacity(0.9) : Colors.white.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
               boxShadow: _isPressed 
                 ? [] 
                 : [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2))],
               border: Border.all(
-                color: _isPressed ? const Color(0xFFFF8C00) : Colors.transparent,
+                color: _isPressed ? const Color(0xFFDAA520) : Colors.white.withOpacity(0.2),
                 width: 2,
               ),
             ),
             child: Icon(
               widget.icon,
               size: 30,
-              color: const Color(0xFFFF8C00),
+              color: _isPressed ? const Color(0xFFDAA520) : Colors.white,
             ),
           ),
           const SizedBox(height: 8),
@@ -50,7 +50,7 @@ class _CategoryItemState extends State<CategoryItem> {
             style: TextStyle(
               fontSize: 12, 
               fontWeight: _isPressed ? FontWeight.bold : FontWeight.w500,
-              color: _isPressed ? const Color(0xFFFF8C00) : Colors.black87
+              color: _isPressed ? const Color(0xFFDAA520) : Colors.white,
             ),
           ),
         ],
@@ -58,3 +58,4 @@ class _CategoryItemState extends State<CategoryItem> {
     );
   }
 }
+

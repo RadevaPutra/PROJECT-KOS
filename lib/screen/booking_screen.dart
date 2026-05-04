@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/jaykos_models.dart';
+import 'dart:ui';
+import '../model/sobatkos_models.dart';
 import '../service/api_service.dart';
 import 'payment_screen.dart';
 
@@ -21,26 +22,33 @@ class _BookingPageState extends State<BookingPage> {
     double harusBayar = (_tipeBayar == "DP") ? totalSewa * 0.2 : totalSewa;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text("Konfirmasi Booking", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFFFF8C00),
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+        ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(25),
               children: [
-                // Room Info Summary
+                // Room Info Summary (Glassmorphism)
                 Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: Colors.grey[50],
+                    color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey[200]!),
+                    border: Border.all(color: Colors.white.withOpacity(0.1)),
                   ),
                   child: Row(
                     children: [
@@ -69,12 +77,12 @@ class _BookingPageState extends State<BookingPage> {
                           children: [
                             Text(
                               "Kamar ${widget.room.nomorKamar}",
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                             const SizedBox(height: 5),
                             Text(
                               "Rp ${widget.room.harga.toStringAsFixed(0)} / bulan",
-                              style: const TextStyle(color: Color(0xFFFF8C00), fontWeight: FontWeight.w600),
+                              style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -82,38 +90,49 @@ class _BookingPageState extends State<BookingPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 35),
 
                 const Text(
-                  "Detail Penyewaan",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  "DETAIL PENYEWAAN",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 1.2),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
 
-                // Duration Stepper replacement
-                const Text("Durasi Sewa (Bulan)", style: TextStyle(color: Colors.grey)),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    _durationButton(Icons.remove, () {
-                      if (_durasi > 1) setState(() => _durasi--);
-                    }),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        "$_durasi Bulan",
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                // Duration Stepper (Glassmorphism)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Durasi Sewa", style: TextStyle(color: Colors.white70, fontSize: 14)),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _durationButton(Icons.remove, () {
+                            if (_durasi > 1) setState(() => _durasi--);
+                          }),
+                          Text(
+                            "$_durasi Bulan",
+                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                          _durationButton(Icons.add, () {
+                            setState(() => _durasi++);
+                          }),
+                        ],
                       ),
-                    ),
-                    _durationButton(Icons.add, () {
-                      setState(() => _durasi++);
-                    }),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 25),
 
-                const Text("Metode Pembayaran", style: TextStyle(color: Colors.grey)),
-                const SizedBox(height: 10),
+                const Text("METODE PEMBAYARAN", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                const SizedBox(height: 15),
                 Row(
                   children: [
                     Expanded(child: _payTypeCard("Lunas", "Bayar Penuh", Icons.check_circle_outline)),
@@ -123,23 +142,22 @@ class _BookingPageState extends State<BookingPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // Summary Card
+                // Summary Card (Premium Glass)
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.orange[50]!, Colors.orange[100]!],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFDAA520).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.2)),
                   ),
                   child: Column(
                     children: [
-                      _summaryRow("Total Harga Sewa", "Rp ${totalSewa.toStringAsFixed(0)}", false),
+                      _summaryRow("Total Sewa", "Rp ${totalSewa.toStringAsFixed(0)}", false),
                       const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Divider(color: Colors.orange),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        child: Divider(color: Colors.white10),
                       ),
-                      _summaryRow("Nominal Harus Bayar", "Rp ${harusBayar.toStringAsFixed(0)}", true),
+                      _summaryRow("Harus Dibayar", "Rp ${harusBayar.toStringAsFixed(0)}", true),
                     ],
                   ),
                 ),
@@ -149,31 +167,32 @@ class _BookingPageState extends State<BookingPage> {
           
           // Action Button
           Padding(
-            padding: const EdgeInsets.all(20),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PaymentScreen(
-                      totalBayar: harusBayar,
-                      namaKamar: widget.room.nomorKamar,
+            padding: const EdgeInsets.all(25),
+            child: SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentScreen(
+                        totalBayar: harusBayar,
+                        namaKamar: widget.room.nomorKamar,
+                      ),
                     ),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF8C00),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                elevation: 5,
-                shadowColor: const Color(0xFFFF8C00).withOpacity(0.4),
-              ),
-              child: const Text(
-                "KONFIRMASI BOOKING",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFDAA520),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 8,
+                  shadowColor: const Color(0xFFDAA520).withOpacity(0.4),
+                ),
+                child: const Text(
+                  "KONFIRMASI BOOKING",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1),
+                ),
               ),
             ),
           ),
@@ -185,13 +204,14 @@ class _BookingPageState extends State<BookingPage> {
   Widget _durationButton(IconData icon, VoidCallback onPressed) {
     return InkWell(
       onTap: onPressed,
+      borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, size: 20),
+        child: Icon(icon, color: Colors.white, size: 24),
       ),
     );
   }
@@ -201,18 +221,19 @@ class _BookingPageState extends State<BookingPage> {
     return GestureDetector(
       onTap: () => setState(() => _tipeBayar = type),
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFF8C00) : Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: isSelected ? const Color(0xFFFF8C00) : Colors.grey[300]!),
+          color: isSelected ? const Color(0xFFDAA520).withOpacity(0.2) : Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: isSelected ? const Color(0xFFDAA520) : Colors.white.withOpacity(0.1), width: 1.5),
         ),
         child: Column(
           children: [
-            Icon(icon, color: isSelected ? Colors.white : Colors.grey),
-            const SizedBox(height: 8),
-            Text(type, style: TextStyle(fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.black)),
-            Text(sub, style: TextStyle(fontSize: 10, color: isSelected ? Colors.white70 : Colors.grey)),
+            Icon(icon, color: isSelected ? const Color(0xFFDAA520) : Colors.white60, size: 28),
+            const SizedBox(height: 12),
+            Text(type, style: TextStyle(fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.white70, fontSize: 16)),
+            const SizedBox(height: 4),
+            Text(sub, style: TextStyle(fontSize: 10, color: isSelected ? const Color(0xFFDAA520) : Colors.white54)),
           ],
         ),
       ),
@@ -223,38 +244,13 @@ class _BookingPageState extends State<BookingPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: isTotal ? 16 : 14, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal)),
+        Text(label, style: TextStyle(fontSize: isTotal ? 16 : 14, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, color: Colors.white70)),
         Text(value, style: TextStyle(
           fontSize: isTotal ? 20 : 16, 
           fontWeight: FontWeight.bold, 
-          color: isTotal ? Colors.green[700] : Colors.black,
+          color: isTotal ? const Color(0xFFDAA520) : Colors.white,
         )),
       ],
-    );
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 80),
-            const SizedBox(height: 20),
-            const Text("Booking Berhasil!", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            const Text("Pemesanan Anda telah tercatat dalam sistem.", textAlign: TextAlign.center),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () => Navigator.popUntil(context, (route) => route.isFirst),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF8C00), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-              child: const Text("KEMBALI KE BERANDA", style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -262,8 +258,9 @@ class _BookingPageState extends State<BookingPage> {
     return Container(
       width: 80,
       height: 80,
-      color: Colors.grey[200],
-      child: const Icon(Icons.room_preferences, color: Colors.grey),
+      color: Colors.white.withOpacity(0.1),
+      child: const Icon(Icons.room_preferences, color: Colors.white30),
     );
   }
 }
+

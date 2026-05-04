@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/jaykos_models.dart';
+import '../model/sobatkos_models.dart';
 
 class RoomCard extends StatelessWidget {
   final Room room;
@@ -17,11 +17,12 @@ class RoomCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+              color: const Color(0xFFDAA520).withOpacity(0.15),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
@@ -78,7 +79,7 @@ class RoomCard extends StatelessWidget {
                     Text(
                       "Rp ${room.harga.toInt()}",
                       style: const TextStyle(
-                        color: Color(0xFFFF8C00),
+                        color: Color(0xFFDAA520),
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
@@ -133,3 +134,4 @@ class RoomCard extends StatelessWidget {
     );
   }
 }
+

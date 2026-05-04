@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/jaykos_models.dart';
+import '../model/sobatkos_models.dart';
 
 class ApiService {
   // IP Emulator Android: 10.0.2.2, Localhost: 127.0.0.1

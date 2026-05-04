@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import '../model/jaykos_models.dart';
+import '../model/sobatkos_models.dart';
 import '../widgets/room_card.dart';
 import '../widgets/custom_route.dart';
 import '../widgets/category_item.dart';
@@ -9,7 +9,8 @@ import 'login_screen.dart';
 import 'room_list_page.dart';
 
 class HomeScreenContent extends StatefulWidget {
-  const HomeScreenContent({super.key});
+  final bool isLoggedIn;
+  const HomeScreenContent({super.key, this.isLoggedIn = false});
 
   @override
   _HomeScreenContentState createState() => _HomeScreenContentState();
@@ -29,34 +30,40 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
   final List<RoomCategory> categories = [
     RoomCategory(title: "Putra", icon: Icons.male, images: ["assets/images/kamar_1.jpg", "assets/images/kamar_2.jpg"]),
     RoomCategory(title: "Putri", icon: Icons.female, images: ["assets/images/kamar_3.jpg", "assets/images/kamar_4.jpg"]),
-    RoomCategory(title: "VIP", icon: Icons.star, images: ["assets/images/kamar_5.jpg", "assets/images/kamar_6.jpg"]),
     RoomCategory(title: "Campur", icon: Icons.group, images: ["assets/images/kamar_7.jpg", "assets/images/kamar_8.jpeg"]),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent, // Update background to transparent for the animated background
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFFFF8C00),
+        backgroundColor: Colors.transparent, // Make app bar transparent
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.white.withOpacity(0.1)),
+          ),
+        ),
         title: const Text(
-          "JAYKOS",
+          "SOBATKOS",
           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.white),
         ),
         actions: [
           IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
-          TextButton(
-            onPressed: () {
-              Navigator.push(context, SlideRoute(page: const LoginPage()));
-            },
-            child: const Text("Login", style: TextStyle(color: Colors.white)),
-          ),
+          if (!widget.isLoggedIn)
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, SlideRoute(page: const LoginPage()));
+              },
+              child: const Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
         ],
+        iconTheme: const IconThemeData(color: Colors.white), // Optional, ensure icons are visible if we use a bright theme
       ),
       body: Stack(
         children: [
-          _buildBackground(),
           SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +73,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 // Kategori Kamar Section
                 const Padding(
                   padding: EdgeInsets.fromLTRB(20, 20, 20, 15),
-                  child: Text("Kategori Kamar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text("Kategori Kamar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(color: Colors.black26, blurRadius: 10)])),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -87,7 +94,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 // Rekomendasi Section
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Rekomendasi Untukmu", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text("Rekomendasi Untukmu", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(color: Colors.black26, blurRadius: 10)])),
                 ),
                 const SizedBox(height: 15),
                 _buildRecommendationList(),
@@ -97,7 +104,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                 // Semua Kamar Section
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Semua Kamar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text("Semua Kamar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(color: Colors.black26, blurRadius: 10)])),
                 ),
                 const SizedBox(height: 15),
                 _buildAllRoomsGrid(),
@@ -111,37 +118,6 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     );
   }
 
-  Widget _buildBackground() {
-    return Stack(
-      children: [
-        Positioned(
-          top: -50,
-          right: -50,
-          child: ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(color: const Color(0xFFFF8C00).withOpacity(0.2), shape: BoxShape.circle),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 200,
-          left: -100,
-          child: ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 70, sigmaY: 70),
-            child: Container(
-              width: 400,
-              height: 400,
-              decoration: BoxDecoration(color: Colors.blue.withOpacity(0.15), shape: BoxShape.circle),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildHeroSection() {
     return Container(
       width: double.infinity,
@@ -150,7 +126,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFFF8C00), Color(0xFFFF4500)],
+          colors: [Color(0xFFDAA520), Color(0xFFDEB887)], // Goldenrod and BurlyWood luxury gradient
         ),
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(35), bottomRight: Radius.circular(35)),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15, offset: Offset(0, 8))],
@@ -159,7 +135,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Temukan HKamar\nTernyamanmu",
+            "Temukan Kamar\nTernyamanmu",
             style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold, height: 1.2),
           ),
           const SizedBox(height: 20),

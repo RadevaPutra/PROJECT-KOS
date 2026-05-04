@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:ui';
 
 class PaymentScreen extends StatelessWidget {
   final double totalBayar;
@@ -11,57 +12,71 @@ class PaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Pembayaran", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        elevation: 0.5,
-        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text("Metode Pembayaran", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
-          // Ringkasan Tagihan
+          // Ringkasan Tagihan (Premium Glass)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(25),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 5))],
+            padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
+            decoration: BoxDecoration(
+              color: const Color(0xFFDAA520).withOpacity(0.15),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(35)),
+              border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.2)),
             ),
             child: Column(
               children: [
-                const Text("Total Tagihan", style: TextStyle(color: Colors.grey, fontSize: 14)),
-                const SizedBox(height: 10),
+                const Text("TOTAL TAGIHAN", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+                const SizedBox(height: 15),
                 Text(
                   "Rp ${totalBayar.toStringAsFixed(0)}",
-                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFFFF8C00)),
+                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Color(0xFFDAA520)),
                 ),
-                const SizedBox(height: 5),
-                Text("Kamar $namaKamar", style: const TextStyle(color: Colors.blueGrey, fontSize: 16)),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text("Kamar $namaKamar", style: const TextStyle(color: Colors.white, fontSize: 14)),
+                ),
               ],
             ),
           ),
 
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(25),
               children: [
-                const Text("Metode Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 15),
+                const Text("Pilih Metode Bayar", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1)),
+                const SizedBox(height: 20),
                 
                 // E-Wallet Section
-                _paymentTile(context, "GoPay", Icons.account_balance_wallet, Colors.blue, "70001081933053869"),
-                _paymentTile(context, "QRIS", Icons.qr_code_scanner, Colors.pink, "", isQR: true),
+                _paymentTile(context, "GoPay / E-Wallet", Icons.account_balance_wallet, const Color(0xFFDAA520), "70001081933053869"),
+                _paymentTile(context, "QRIS (Semua E-Wallet)", Icons.qr_code_scanner, const Color(0xFFDEB887), "", isQR: true),
                 
-                const SizedBox(height: 25),
-                const Text("Transfer Bank", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
+                const Text("TRANSFER BANK", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white54, letterSpacing: 1.2)),
+                const SizedBox(height: 15),
                 
                 // Bank Section
-                _paymentTile(context, "Bank BCA", Icons.account_balance, Colors.blue.shade900, "7670752148"),
-                _paymentTile(context, "Bank Mandiri", Icons.account_balance, Colors.yellow.shade800, "8870852148"),
-                _paymentTile(context, "Bank BNI", Icons.account_balance, Colors.orange.shade900, "9970952148"),
+                _paymentTile(context, "Bank BCA", Icons.account_balance, const Color(0xFFDAA520), "7670752148"),
+                _paymentTile(context, "Bank Mandiri", Icons.account_balance, const Color(0xFFDEB887), "8870852148"),
+                _paymentTile(context, "Bank BNI", Icons.account_balance, const Color(0xFFDAA520), "9970952148"),
               ],
             ),
           ),
@@ -71,17 +86,25 @@ class PaymentScreen extends StatelessWidget {
   }
 
   Widget _paymentTile(BuildContext context, String title, IconData icon, Color color, String detail, {bool isQR = false}) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.1),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Icon(icon, color: color),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-        trailing: const Icon(Icons.chevron_right),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)),
+        trailing: const Icon(Icons.chevron_right, color: Colors.white54),
         onTap: () => _showPaymentDetail(context, title, detail, isQR: isQR),
       ),
     );
@@ -91,26 +114,34 @@ class PaymentScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: const Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), 
+          side: BorderSide(color: const Color(0xFFDAA520).withOpacity(0.3)),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 80),
+            const Icon(Icons.check_circle, color: Color(0xFFDAA520), size: 80),
             const SizedBox(height: 20),
-            const Text("Instruksi Terkirim!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text("Instruksi Terkirim!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
             const SizedBox(height: 10),
             const Text(
               "Silahkan kirim foto bukti transfer Anda melalui chat WhatsApp yang baru saja terbuka.",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
+              height: 50,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF8C00)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFDAA520),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
                 onPressed: () => Navigator.pop(context),
-                child: const Text("OK", style: TextStyle(color: Colors.white)),
+                child: const Text("MENGERTI", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
             )
           ],
@@ -119,24 +150,20 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 
-  // Fungsi untuk mengirim pesan ke WhatsApp
   void _sendWhatsAppConfirmation(String method) async {
-    String adminNumber = "6281234567890"; // Ganti dengan nomor WhatsApp Admin Anda (awali dengan 62)
+    String adminNumber = "6281234567890";
     String message = 
-        "Halo Admin Jaykos, saya ingin konfirmasi pembayaran.\n\n"
+        "Halo Admin SobatKos, saya ingin konfirmasi pembayaran.\n\n"
         "*Detail Pesanan:*\n"
-        "• Kamar: $namaKamar\n"
-        "• Metode: $method\n"
-        "• Total: Rp ${totalBayar.toStringAsFixed(0)}\n\n"
+        "â€¢ Kamar: $namaKamar\n"
+        "â€¢ Metode: $method\n"
+        "â€¢ Total: Rp ${totalBayar.toStringAsFixed(0)}\n\n"
         "Saya telah melakukan transfer. Mohon segera diproses. Terima kasih!";
 
     var whatsappUrl = Uri.parse("https://wa.me/$adminNumber?text=${Uri.encodeComponent(message)}");
 
     if (await canLaunchUrl(whatsappUrl)) {
       await launchUrl(whatsappUrl);
-    } else {
-      // Beri pesan jika WhatsApp tidak terinstall
-      debugPrint("Tidak bisa membuka WhatsApp");
     }
   }
 
@@ -144,66 +171,68 @@ class PaymentScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Agar rounded corner terlihat
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(25),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+          padding: const EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            color: const Color(0xFF110D0A),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(35)),
+            border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.2)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Garis handle atas
-              Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
-              const SizedBox(height: 25),
+              Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10))),
+              const SizedBox(height: 30),
               
-              Text("Detail Pembayaran $title", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 25),
+              Text("Bayar Via $title", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+              const SizedBox(height: 30),
 
               if (isQR)
-                // Menampilkan Barcode QRIS yang sesuai dengan gambar Anda
                 Container(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [BoxShadow(color: const Color(0xFFDAA520).withOpacity(0.2), blurRadius: 20)],
                   ),
-                  child: Image.asset(
-                    'assets/images/qris_barcode.png', // Pastikan file image_c12618.png disimpan dengan nama ini di folder assets
-                    height: 300,
-                    fit: BoxFit.contain,
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset('assets/images/qris_sobatkos.png', height: 260, width: 260, fit: BoxFit.contain),
+                      ),
+                      const SizedBox(height: 15),
+                      const Text("SCAN QRIS SOBATKOS", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54, letterSpacing: 1)),
+                    ],
                   ),
                 )
               else
-                // Menampilkan Nomor VA atau Rekening
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Nomor Rekening / VA", style: TextStyle(color: Colors.grey, fontSize: 13)),
-                    const SizedBox(height: 8),
+                    const Text("NOMOR REKENING / VA", style: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.all(18),
+                      padding: const EdgeInsets.all(25),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FA),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade200),
+                        color: Colors.white.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.3)),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SelectableText(
-                            detail, 
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.5)
+                            detail,
+                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFDAA520), letterSpacing: 2),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.copy, color: Color(0xFFFF8C00)),
+                            icon: const Icon(Icons.copy, color: Color(0xFFDAA520)),
                             onPressed: () {
                               Clipboard.setData(ClipboardData(text: detail));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Nomor berhasil disalin")),
-                              );
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Nomor disalin")));
                             },
                           ),
                         ],
@@ -212,38 +241,39 @@ class PaymentScreen extends StatelessWidget {
                   ],
                 ),
 
-              const SizedBox(height: 35),
+              const SizedBox(height: 40),
               
-              // Tombol Konfirmasi Bayar
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    elevation: 0,
+                    backgroundColor: const Color(0xFFDAA520),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   onPressed: () {
-                    Navigator.pop(context); // Tutup Bottom Sheet
-                    
-                    // 1. Kirim pesan ke WhatsApp
-                    _sendWhatsAppConfirmation(title); 
-                    
-                    // 2. Tampilkan dialog sukses di aplikasi
-                    _showSuccessDialog(context); 
+                    Navigator.pop(context);
+                    _showSuccessDialog(context);
+                    _sendWhatsAppConfirmation(title);
                   },
-                  child: const Text(
-                    "SAYA SUDAH BAYAR", 
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)
-                  ),
+                  child: const Text("KONFIRMASI PEMBAYARAN", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
             ],
           ),
         );
       },
     );
   }
+
+
+  Widget _buildBankIcon(String path, double width) {
+    return Image.asset(
+      path,
+      width: width,
+      errorBuilder: (context, error, stackTrace) => const SizedBox(), // Sembunyikan jika gambar belum ada
+    );
+  }
 }
+

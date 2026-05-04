@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/jaykos_models.dart';
+import 'dart:ui';
+import '../model/sobatkos_models.dart';
 import 'payment_screen.dart';
 
 class RoomListPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _RoomListPageState extends State<RoomListPage> {
         "name": "Kamar ${widget.category.title} #0${index + 1}",
         "image": widget.category.images[index],
         "price": 1200000.0 + (index * 200000), // Variasi harga untuk testing filter
-        "location": index % 2 == 0 ? "Sekitar Telkom" : "Sukabirus",
+        "location": index % 2 == 0 ? "Denpasar" : "Sesetan",
         "facilities": "Kasur, Lemari, WiFi, KM Dalam",
       };
     });
@@ -47,7 +48,7 @@ class _RoomListPageState extends State<RoomListPage> {
             "name": "Kamar ${widget.category.title} #0${index + 1}",
             "image": widget.category.images[index],
             "price": 1200000.0 + (index * 200000),
-            "location": index % 2 == 0 ? "Sekitar Telkom" : "Sukabirus",
+            "location": index % 2 == 0 ? "Denpasar" : "Sesetan",
             "facilities": "Kasur, Lemari, WiFi, KM Dalam",
           };
         });
@@ -79,12 +80,19 @@ class _RoomListPageState extends State<RoomListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text("Kamar ${widget.category.title}", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFFFF8C00),
-        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
@@ -92,15 +100,15 @@ class _RoomListPageState extends State<RoomListPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
+              color: Colors.white.withOpacity(0.1),
+              border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.1))),
             ),
             child: Row(
               children: [
                 _buildFilterDropdown(
                   icon: Icons.location_on,
                   value: selectedLocation,
-                  items: ["Semua Lokasi", "Sekitar Telkom", "Sukabirus", "Padasuka"],
+                  items: ["Semua Lokasi", "Denpasar", "Sesetan"],
                   onChanged: (val) => setState(() => selectedLocation = val!),
                 ),
                 const SizedBox(width: 10),
@@ -146,15 +154,18 @@ class _RoomListPageState extends State<RoomListPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade300),
+          color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             value: value,
             isExpanded: true,
-            icon: Icon(icon, size: 16, color: const Color(0xFFFF8C00)),
-            items: items.map((String item) => DropdownMenuItem(value: item, child: Text(item, style: const TextStyle(fontSize: 12)))).toList(),
+            dropdownColor: const Color(0xFF1E293B),
+            style: const TextStyle(color: Colors.white, fontSize: 12),
+            icon: Icon(icon, size: 16, color: const Color(0xFFDAA520)),
+            items: items.map((String item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
             onChanged: onChanged,
           ),
         ),
@@ -182,7 +193,7 @@ class _RoomListPageState extends State<RoomListPage> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFF8C00).withOpacity(0.9),
+                      color: const Color(0xFF3B82F6).withOpacity(0.9),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -203,7 +214,7 @@ class _RoomListPageState extends State<RoomListPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(room['name'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Text("Rp ${room['price'].toInt()}", style: const TextStyle(color: Color(0xFFFF8C00), fontWeight: FontWeight.bold)),
+                    Text("Rp ${room['price'].toInt()}", style: const TextStyle(color: Color(0xFF3B82F6), fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -224,7 +235,7 @@ class _RoomListPageState extends State<RoomListPage> {
                   height: 48,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF8C00),
+                      backgroundColor: const Color(0xFFDAA520),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
                     onPressed: () {
@@ -249,3 +260,4 @@ class _RoomListPageState extends State<RoomListPage> {
     );
   }
 }
+

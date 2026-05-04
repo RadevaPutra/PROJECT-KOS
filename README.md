@@ -1,4 +1,4 @@
-# jay_kos
+# SobatKos
 
 A new Flutter project.
 
