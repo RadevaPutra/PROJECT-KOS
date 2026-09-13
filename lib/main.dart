@@ -4,6 +4,7 @@ import 'screen/home_screen.dart';
 import 'screen/login_screen.dart';
 import 'widgets/animated_modern_background.dart';
 import 'screen/profile_menus_screen.dart';
+import 'screen/splash_screen.dart';
 
 void main() => runApp(const SobatKosApp());
 
@@ -16,13 +17,13 @@ class SobatKosApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SobatKos',
       theme: ThemeData(
-        primaryColor: const Color(0xFFDAA520), // Goldenrod
+        primaryColor: const Color(0xFFF58220), // Orange
         scaffoldBackgroundColor: Colors.transparent, 
         visualDensity: VisualDensity.adaptivePlatformDensity,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFDAA520),
-          primary: const Color(0xFFDAA520),
-          secondary: const Color(0xFFDEB887),
+          seedColor: const Color(0xFFF58220),
+          primary: const Color(0xFFF58220),
+          secondary: const Color(0xFF3577AD), // Blue
         ),
         fontFamily: 'Segoe UI',
         useMaterial3: true,
@@ -30,7 +31,7 @@ class SobatKosApp extends StatelessWidget {
       builder: (context, child) {
         return AnimatedModernBackground(child: child);
       },
-      home: const MainNavigation(isLoggedIn: false), // Default not logged in
+      home: const SplashScreen(),
     );
   }
 }
@@ -125,11 +126,11 @@ class FavoriteScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Koleksi Favorit", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("Koleksi Favorit", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: favRooms.isEmpty
           ? _buildEmptyState()
@@ -146,9 +147,9 @@ class FavoriteScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.favorite_outline, size: 80, color: Colors.grey[300]),
+          Icon(Icons.favorite_outline, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 10),
-          const Text("Belum ada kamar favorit", style: TextStyle(color: Colors.white70)),
+          const Text("Belum ada kamar favorit", style: TextStyle(color: Colors.black54)),
         ],
       ),
     );
@@ -230,11 +231,11 @@ class HistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Riwayat Booking", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text("Riwayat Booking", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: Column(
         children: [
@@ -242,9 +243,9 @@ class HistoryScreen extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1), // Glassy background
+                color: Colors.white.withOpacity(0.6), // Glassy background
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: Colors.white.withOpacity(0.5)),
               ),
               child: ListView.builder(
                 padding: const EdgeInsets.all(25),
@@ -277,9 +278,9 @@ class HistoryScreen extends StatelessWidget {
   Widget _statTile(String label, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(value, style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+        Text(label, style: const TextStyle(color: Colors.black54, fontSize: 13)),
       ],
     );
   }
@@ -320,11 +321,11 @@ class HistoryScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(data.roomName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text("Rp ${data.amount}", style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.bold)),
+                    Text("Rp ${data.amount}", style: const TextStyle(color: Color(0xFFF58220), fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(data.date, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                Text(data.date, style: const TextStyle(color: Colors.black54, fontSize: 12)),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Divider(height: 1),
@@ -370,7 +371,7 @@ class ProfileScreen extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFDAA520), Color(0xFFDEB887)], // Goldenrod to BurlyWood
+                colors: [Color(0xFFF58220), Color(0xFF3577AD)], // Orange to Blue
               ),
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(35)),
               boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15, offset: Offset(0, 8))],
@@ -454,7 +455,7 @@ class ProfileScreen extends StatelessWidget {
         child: Icon(icon, color: color, size: 24),
       ),
       title: Text(title, style: TextStyle(color: color, fontWeight: FontWeight.w600, fontSize: 16)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white54),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black38),
       onTap: onTap ?? () {},
     );
   }

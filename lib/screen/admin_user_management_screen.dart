@@ -15,19 +15,13 @@ class AdminUserManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text("Data User", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Colors.transparent,
+        title: const Text("Data User", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        flexibleSpace: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.2)),
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(20),
@@ -45,33 +39,40 @@ class AdminUserManagementScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.black12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 25,
-            backgroundColor: const Color(0xFFDAA520).withOpacity(0.2),
-            child: Text(user['name']![0], style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.bold)),
+            backgroundColor: const Color(0xFFF58220).withOpacity(0.1),
+            child: Text(user['name']![0], style: const TextStyle(color: Color(0xFFF58220), fontWeight: FontWeight.bold)),
           ),
           const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user['name']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(user['email']!, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                Text(user['name']!, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(user['email']!, style: const TextStyle(color: Colors.black54, fontSize: 12)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(user['role']!, style: const TextStyle(color: Color(0xFFDAA520), fontSize: 10, fontWeight: FontWeight.bold)),
+              Text(user['role']!, style: const TextStyle(color: Color(0xFF2563EB), fontSize: 10, fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
-              Text("Joined ${user['join']}", style: const TextStyle(color: Colors.white38, fontSize: 10)),
+              Text("Joined ${user['join']}", style: const TextStyle(color: Colors.black38, fontSize: 10)),
             ],
           ),
         ],

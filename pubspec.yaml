@@ -14,6 +14,8 @@ dependencies:
   http: ^1.1.0                # Untuk komunikasi dengan Servlet
   shared_preferences: ^2.2.0   # Untuk menyimpan session (username/role) secara lokal
   url_launcher: ^6.2.5
+  video_player: ^2.11.1
+  image_picker: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -25,3 +27,4 @@ flutter:
   assets:
     - assets/images/qris_sobatkos.png
     - assets/images/
+    - assets/videos/

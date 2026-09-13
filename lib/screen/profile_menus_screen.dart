@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 // --- Reusable Modern Card Wrapper ---
 class ModernCard extends StatelessWidget {
@@ -13,12 +15,12 @@ class ModernCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 20),
       padding: padding,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.6),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.15)),
+        border: Border.all(color: Colors.black12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -32,23 +34,43 @@ class ModernCard extends StatelessWidget {
 // --- Reusable Modern AppBar ---
 PreferredSizeWidget _buildModernAppBar(BuildContext context, String title) {
   return AppBar(
-    title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+    title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
     backgroundColor: Colors.transparent,
     elevation: 0,
     centerTitle: true,
     flexibleSpace: ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(color: Colors.black.withOpacity(0.2)),
+        child: Container(color: Colors.white.withOpacity(0.4)),
       ),
     ),
-    iconTheme: const IconThemeData(color: Colors.white),
+    iconTheme: const IconThemeData(color: Colors.black87),
   );
 }
 
 // --- Informasi Pribadi ---
-class PersonalInfoScreen extends StatelessWidget {
+class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
+
+  @override
+  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
+}
+
+class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
+  File? _imageFile;
+  final TextEditingController _nameController = TextEditingController(text: "Gde Radeva");
+  final TextEditingController _emailController = TextEditingController(text: "gderadeva@example.com");
+  final TextEditingController _phoneController = TextEditingController(text: "081234567890");
+  final TextEditingController _instansiController = TextEditingController(text: "Telkom University");
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,23 +85,28 @@ class PersonalInfoScreen extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: const LinearGradient(colors: [Color(0xFFDAA520), Color(0xFFDEB887)]),
+                    gradient: LinearGradient(colors: [Color(0xFFF58220), Color(0xFF3577AD)]),
                   ),
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     radius: 60,
                     backgroundColor: Colors.grey,
-                    backgroundImage: AssetImage('assets/images/kamar_1.jpg'),
+                    backgroundImage: _imageFile != null 
+                        ? FileImage(_imageFile!) as ImageProvider
+                        : const AssetImage('assets/images/kamar_1.jpg'),
                   ),
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(color: Color(0xFFDAA520), shape: BoxShape.circle),
-                    child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                  child: GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(color: Color(0xFFF58220), shape: BoxShape.circle),
+                      child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                    ),
                   ),
                 )
               ],
@@ -89,13 +116,13 @@ class PersonalInfoScreen extends StatelessWidget {
           ModernCard(
             child: Column(
               children: [
-                _buildModernTextField("Nama Lengkap", "Gde Radeva", Icons.person_outline),
+                _buildModernTextField("Nama Lengkap", _nameController, Icons.person_outline),
                 const SizedBox(height: 20),
-                _buildModernTextField("Email", "gderadeva@example.com", Icons.email_outlined),
+                _buildModernTextField("Email", _emailController, Icons.email_outlined),
                 const SizedBox(height: 20),
-                _buildModernTextField("Nomor Telepon", "081234567890", Icons.phone_android_outlined),
+                _buildModernTextField("Nomor Telepon", _phoneController, Icons.phone_android_outlined),
                 const SizedBox(height: 20),
-                _buildModernTextField("Instansi", "Telkom University", Icons.school_outlined),
+                _buildModernTextField("Instansi", _instansiController, Icons.school_outlined),
               ],
             ),
           ),
@@ -104,12 +131,17 @@ class PersonalInfoScreen extends StatelessWidget {
             height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDAA520),
+                backgroundColor: const Color(0xFFF58220),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 elevation: 8,
-                shadowColor: const Color(0xFFDAA520).withOpacity(0.4),
+                shadowColor: const Color(0xFFF58220).withOpacity(0.4),
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Profil berhasil diperbarui')),
+                );
+                Navigator.pop(context);
+              },
               child: const Text("Simpan Perubahan", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           )
@@ -118,19 +150,19 @@ class PersonalInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildModernTextField(String label, String initialValue, IconData icon) {
+  Widget _buildModernTextField(String label, TextEditingController controller, IconData icon) {
     return TextFormField(
-      initialValue: initialValue,
-      style: const TextStyle(color: Colors.white),
+      controller: controller,
+      style: const TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70),
-        prefixIcon: Icon(icon, color: Colors.white70),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.white.withOpacity(0.2))),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.white.withOpacity(0.2))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFDAA520), width: 2)),
+        labelStyle: const TextStyle(color: Colors.black54),
+        prefixIcon: Icon(icon, color: Colors.black54),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.black12)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFF58220), width: 2)),
         filled: true,
-        fillColor: Colors.black.withOpacity(0.1),
+        fillColor: Colors.white.withOpacity(0.4),
       ),
     );
   }
@@ -152,9 +184,9 @@ class SecurityScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Ubah Password", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                Text("Ubah Password", style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
-                Text("Pastikan password baru Anda kuat dan sulit ditebak untuk keamanan akun.", style: TextStyle(color: Colors.white60, fontSize: 13)),
+                Text("Pastikan password baru Anda kuat dan sulit ditebak untuk keamanan akun.", style: TextStyle(color: Colors.black54, fontSize: 13)),
               ],
             ),
           ),
@@ -174,10 +206,10 @@ class SecurityScreen extends StatelessWidget {
             height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDAA520),
+                backgroundColor: const Color(0xFFF58220),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 elevation: 8,
-                shadowColor: const Color(0xFFDAA520).withOpacity(0.4),
+                shadowColor: const Color(0xFFF58220).withOpacity(0.4),
               ),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Password berhasil diubah')));
@@ -194,17 +226,17 @@ class SecurityScreen extends StatelessWidget {
   Widget _buildModernPasswordField(String label) {
     return TextFormField(
       obscureText: true,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70),
-        prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
-        suffixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.white70),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.white.withOpacity(0.2))),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.white.withOpacity(0.2))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFDAA520), width: 2)),
+        labelStyle: const TextStyle(color: Colors.black54),
+        prefixIcon: const Icon(Icons.lock_outline, color: Colors.black54),
+        suffixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.black54),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.black12)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFF58220), width: 2)),
         filled: true,
-        fillColor: Colors.black.withOpacity(0.1),
+        fillColor: Colors.white.withOpacity(0.4),
       ),
     );
   }
@@ -231,20 +263,20 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
       body: ListView(
         padding: const EdgeInsets.all(25),
         children: [
-          const Text("PUSH NOTIFICATION", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          const Text("PUSH NOTIFICATION", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
           const SizedBox(height: 15),
           ModernCard(
             padding: EdgeInsets.zero,
             child: Column(
               children: [
                 _buildModernSwitch("Promo & Diskon", "Dapatkan info promo terbaru", pushPromo, (v) => setState(() => pushPromo = v)),
-                const Divider(color: Colors.white10, height: 1),
+                const Divider(color: Colors.black12, height: 1),
                 _buildModernSwitch("Status Booking", "Dapatkan update status booking", pushUpdate, (v) => setState(() => pushUpdate = v)),
               ],
             ),
           ),
           const SizedBox(height: 15),
-          const Text("EMAIL NOTIFICATION", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          const Text("EMAIL NOTIFICATION", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
           const SizedBox(height: 15),
           ModernCard(
             padding: EdgeInsets.zero,
@@ -259,9 +291,9 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
     return SwitchListTile(
       value: value,
       onChanged: onChanged,
-      activeColor: const Color(0xFF22D3EE),
-      title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+      activeColor: const Color(0xFFF58220),
+      title: Text(title, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.black54, fontSize: 12)),
     );
   }
 }
@@ -278,22 +310,22 @@ class HelpCenterScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(25),
         children: [
-          const Text("FAQ - PERTANYAAN POPULER", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          const Text("FAQ - PERTANYAAN POPULER", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
           const SizedBox(height: 15),
           ModernCard(
             padding: EdgeInsets.zero,
             child: Column(
               children: [
                 _buildModernFaqItem("Bagaimana cara booking kamar?"),
-                const Divider(color: Colors.white10, height: 1),
+                const Divider(color: Colors.black12, height: 1),
                 _buildModernFaqItem("Metode pembayaran apa saja?"),
-                const Divider(color: Colors.white10, height: 1),
+                const Divider(color: Colors.black12, height: 1),
                 _buildModernFaqItem("Cara membatalkan booking?"),
               ],
             ),
           ),
           const SizedBox(height: 25),
-          const Text("HUBUNGI KAMI", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          const Text("HUBUNGI KAMI", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
           const SizedBox(height: 15),
           _buildContactCard(Icons.email_outlined, "Email Support", "support@sobatkos.com"),
           const SizedBox(height: 15),
@@ -305,15 +337,15 @@ class HelpCenterScreen extends StatelessWidget {
 
   Widget _buildModernFaqItem(String question) {
     return ExpansionTile(
-      title: Text(question, style: const TextStyle(color: Colors.white, fontSize: 14)),
-      iconColor: const Color(0xFFDAA520),
-      collapsedIconColor: Colors.white60,
+      title: Text(question, style: const TextStyle(color: Colors.black87, fontSize: 14)),
+      iconColor: const Color(0xFFF58220),
+      collapsedIconColor: Colors.black54,
       children: const [
         Padding(
           padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Text(
             "Anda dapat melakukan hal ini langsung dari menu yang tersedia di aplikasi kami. Jika ada kendala, silakan hubungi tim support.",
-            style: TextStyle(color: Colors.white60, fontSize: 13, height: 1.5),
+            style: TextStyle(color: Colors.black54, fontSize: 13, height: 1.5),
           ),
         )
       ],
@@ -327,19 +359,19 @@ class HelpCenterScreen extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: const Color(0xFFDAA520).withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: const Color(0xFFDAA520)),
+            decoration: BoxDecoration(color: const Color(0xFFF58220).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            child: Icon(icon, color: const Color(0xFFF58220)),
           ),
           const SizedBox(width: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              Text(value, style: const TextStyle(color: Colors.white60, fontSize: 13)),
+              Text(title, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
+              Text(value, style: const TextStyle(color: Colors.black54, fontSize: 13)),
             ],
           ),
           const Spacer(),
-          const Icon(Icons.chevron_right, color: Colors.white30),
+          const Icon(Icons.chevron_right, color: Colors.black38),
         ],
       ),
     );

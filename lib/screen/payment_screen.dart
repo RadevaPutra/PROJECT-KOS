@@ -14,17 +14,17 @@ class PaymentScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Metode Pembayaran", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text("Metode Pembayaran", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         flexibleSpace: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.2)),
+            child: Container(color: Colors.white.withOpacity(0.4)),
           ),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: Column(
         children: [
@@ -33,26 +33,26 @@ class PaymentScreen extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
             decoration: BoxDecoration(
-              color: const Color(0xFFDAA520).withOpacity(0.15),
+              color: const Color(0xFFF58220).withOpacity(0.1),
               borderRadius: const BorderRadius.vertical(bottom: Radius.circular(35)),
-              border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.2)),
+              border: Border.all(color: const Color(0xFFF58220).withOpacity(0.2)),
             ),
             child: Column(
               children: [
-                const Text("TOTAL TAGIHAN", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+                const Text("TOTAL TAGIHAN", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
                 const SizedBox(height: 15),
                 Text(
                   "Rp ${totalBayar.toStringAsFixed(0)}",
-                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Color(0xFFDAA520)),
+                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Color(0xFFF58220)),
                 ),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: const Color(0xFFF58220).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text("Kamar $namaKamar", style: const TextStyle(color: Colors.white, fontSize: 14)),
+                  child: Text("Kamar $namaKamar", style: const TextStyle(color: Colors.black87, fontSize: 14, fontWeight: FontWeight.w600)),
                 ),
               ],
             ),
@@ -62,21 +62,21 @@ class PaymentScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(25),
               children: [
-                const Text("Pilih Metode Bayar", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1)),
+                const Text("Pilih Metode Bayar", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87, letterSpacing: 1)),
                 const SizedBox(height: 20),
                 
                 // E-Wallet Section
-                _paymentTile(context, "GoPay / E-Wallet", Icons.account_balance_wallet, const Color(0xFFDAA520), "70001081933053869"),
-                _paymentTile(context, "QRIS (Semua E-Wallet)", Icons.qr_code_scanner, const Color(0xFFDEB887), "", isQR: true),
+                _paymentTile(context, "GoPay / E-Wallet", Icons.account_balance_wallet, const Color(0xFFF58220), "70001081933053869"),
+                _paymentTile(context, "QRIS (Semua E-Wallet)", Icons.qr_code_scanner, const Color(0xFFF58220), "", isQR: true),
                 
                 const SizedBox(height: 30),
-                const Text("TRANSFER BANK", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white54, letterSpacing: 1.2)),
+                const Text("TRANSFER BANK", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54, letterSpacing: 1.2)),
                 const SizedBox(height: 15),
                 
                 // Bank Section
-                _paymentTile(context, "Bank BCA", Icons.account_balance, const Color(0xFFDAA520), "7670752148"),
-                _paymentTile(context, "Bank Mandiri", Icons.account_balance, const Color(0xFFDEB887), "8870852148"),
-                _paymentTile(context, "Bank BNI", Icons.account_balance, const Color(0xFFDAA520), "9970952148"),
+                _paymentTile(context, "Bank BCA", Icons.account_balance, const Color(0xFF3577AD), "7670752148"),
+                _paymentTile(context, "Bank Mandiri", Icons.account_balance, const Color(0xFF3577AD), "8870852148"),
+                _paymentTile(context, "Bank BNI", Icons.account_balance, const Color(0xFF3577AD), "9970952148"),
               ],
             ),
           ),
@@ -89,9 +89,16 @@ class PaymentScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withOpacity(0.6),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.black12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -103,8 +110,8 @@ class PaymentScreen extends StatelessWidget {
           ),
           child: Icon(icon, color: color),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white54),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black87, fontSize: 16)),
+        trailing: const Icon(Icons.chevron_right, color: Colors.black38),
         onTap: () => _showPaymentDetail(context, title, detail, isQR: isQR),
       ),
     );
@@ -114,22 +121,22 @@ class PaymentScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20), 
-          side: BorderSide(color: const Color(0xFFDAA520).withOpacity(0.3)),
+          side: BorderSide(color: const Color(0xFFF58220).withOpacity(0.3)),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, color: Color(0xFFDAA520), size: 80),
+            const Icon(Icons.check_circle, color: Color(0xFFF58220), size: 80),
             const SizedBox(height: 20),
-            const Text("Instruksi Terkirim!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
+            const Text("Instruksi Terkirim!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87)),
             const SizedBox(height: 10),
             const Text(
               "Silahkan kirim foto bukti transfer Anda melalui chat WhatsApp yang baru saja terbuka.",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 14),
+              style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             const SizedBox(height: 30),
             SizedBox(
@@ -137,7 +144,7 @@ class PaymentScreen extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFDAA520),
+                  backgroundColor: const Color(0xFFF58220),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () => Navigator.pop(context),
@@ -151,13 +158,13 @@ class PaymentScreen extends StatelessWidget {
   }
 
   void _sendWhatsAppConfirmation(String method) async {
-    String adminNumber = "6281234567890";
+    String adminNumber = "6281933053869";
     String message = 
         "Halo Admin SobatKos, saya ingin konfirmasi pembayaran.\n\n"
         "*Detail Pesanan:*\n"
-        "â€¢ Kamar: $namaKamar\n"
-        "â€¢ Metode: $method\n"
-        "â€¢ Total: Rp ${totalBayar.toStringAsFixed(0)}\n\n"
+        "• Kamar: $namaKamar\n"
+        "• Metode: $method\n"
+        "• Total: Rp ${totalBayar.toStringAsFixed(0)}\n\n"
         "Saya telah melakukan transfer. Mohon segera diproses. Terima kasih!";
 
     var whatsappUrl = Uri.parse("https://wa.me/$adminNumber?text=${Uri.encodeComponent(message)}");
@@ -176,60 +183,53 @@ class PaymentScreen extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(30),
           decoration: BoxDecoration(
-            color: const Color(0xFF110D0A),
+            color: Colors.white,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(35)),
-            border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.2)),
+            border: Border.all(color: const Color(0xFFF58220).withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, -10),
+              )
+            ]
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10))),
+              Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.black12, borderRadius: BorderRadius.circular(10))),
               const SizedBox(height: 30),
               
-              Text("Bayar Via $title", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text("Bayar Via $title", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
               const SizedBox(height: 30),
 
               if (isQR)
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [BoxShadow(color: const Color(0xFFDAA520).withOpacity(0.2), blurRadius: 20)],
-                  ),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset('assets/images/qris_sobatkos.png', height: 260, width: 260, fit: BoxFit.contain),
-                      ),
-                      const SizedBox(height: 15),
-                      const Text("SCAN QRIS SOBATKOS", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54, letterSpacing: 1)),
-                    ],
-                  ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset('assets/images/qris_sobatkos.png', height: 280, width: 280, fit: BoxFit.contain),
                 )
               else
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("NOMOR REKENING / VA", style: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.bold)),
+                    const Text("NOMOR REKENING / VA", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(25),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.black.withOpacity(0.04),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.3)),
+                        border: Border.all(color: Colors.black12),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SelectableText(
                             detail,
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFDAA520), letterSpacing: 2),
+                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFF58220), letterSpacing: 2),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.copy, color: Color(0xFFDAA520)),
+                            icon: const Icon(Icons.copy, color: Color(0xFFF58220)),
                             onPressed: () {
                               Clipboard.setData(ClipboardData(text: detail));
                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Nomor disalin")));
@@ -248,7 +248,7 @@ class PaymentScreen extends StatelessWidget {
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDAA520),
+                    backgroundColor: const Color(0xFFF58220),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                   onPressed: () {
@@ -264,15 +264,6 @@ class PaymentScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-
-  Widget _buildBankIcon(String path, double width) {
-    return Image.asset(
-      path,
-      width: width,
-      errorBuilder: (context, error, stackTrace) => const SizedBox(), // Sembunyikan jika gambar belum ada
     );
   }
 }

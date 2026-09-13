@@ -36,43 +36,43 @@ class _AnimatedModernBackgroundState extends State<AnimatedModernBackground> wit
       builder: (context, child) {
         return Stack(
           children: [
-            // Luxury dark base background
-            Container(color: const Color(0xFF110D0A)), 
+            // Soft Light Base Background
+            Container(color: const Color(0xFFFAFAFA)), 
             
-            // Goldenrod Blob (Primary)
+            // Orange Blob (Primary Logo Color)
             Positioned(
               top: size.height * -0.2 + math.sin(_controller.value * 2 * math.pi) * 120,
               left: size.width * -0.3 + math.cos(_controller.value * 2 * math.pi) * 120,
-              child: _buildBlob(const Color(0xFFDAA520), size.width * 1.5, 0.3),
+              child: _buildBlob(const Color(0xFFF58220), size.width * 1.5, 0.15),
             ),
             
-            // BurlyWood Blob (Secondary)
+            // Blue Blob (Secondary Logo Color)
             Positioned(
               bottom: size.height * -0.2 + math.cos(_controller.value * 2 * math.pi + math.pi / 2) * 150,
               right: size.width * -0.3 + math.sin(_controller.value * 2 * math.pi + math.pi / 2) * 150,
-              child: _buildBlob(const Color(0xFFDEB887), size.width * 1.6, 0.25),
+              child: _buildBlob(const Color(0xFF3577AD), size.width * 1.6, 0.10),
             ),
             
-            // Dark Goldenrod Blob (Accent)
+            // Soft Orange Blob (Accent)
             Positioned(
               top: size.height * 0.4 + math.sin(_controller.value * 2 * math.pi + math.pi) * 100,
               right: size.width * -0.1 + math.cos(_controller.value * 2 * math.pi + math.pi) * 100,
-              child: _buildBlob(const Color(0xFFB8860B), size.width * 1.2, 0.2),
+              child: _buildBlob(const Color(0xFFF39C12), size.width * 1.2, 0.10),
             ),
 
-            // SaddleBrown Accent (Soft Glow)
+            // Light Blue Accent (Soft Glow)
             Positioned(
               bottom: size.height * 0.2 + math.sin(_controller.value * 2 * math.pi + 1.5 * math.pi) * 80,
               left: size.width * 0.1 + math.cos(_controller.value * 2 * math.pi + 1.5 * math.pi) * 80,
-              child: _buildBlob(const Color(0xFF8B4513), size.width * 0.8, 0.15),
+              child: _buildBlob(const Color(0xFF85C1E9), size.width * 0.8, 0.10),
             ),
 
-            // Glassmorphism Overlay with high blur
+            // Glassmorphism Overlay (Light)
             Positioned.fill(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 120, sigmaY: 120),
                 child: Container(
-                  color: Colors.black.withOpacity(0.35),
+                  color: Colors.white.withOpacity(0.4),
                 ),
               ),
             ),

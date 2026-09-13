@@ -17,10 +17,10 @@ class RoomCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
+          border: Border.all(color: Colors.black12),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFDAA520).withOpacity(0.15),
+              color: const Color(0xFFF58220).withOpacity(0.15),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -79,7 +79,7 @@ class RoomCard extends StatelessWidget {
                     Text(
                       "Rp ${room.harga.toInt()}",
                       style: const TextStyle(
-                        color: Color(0xFFDAA520),
+                        color: Color(0xFFF58220),
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),

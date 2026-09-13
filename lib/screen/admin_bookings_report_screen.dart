@@ -39,19 +39,13 @@ class AdminBookingsReportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text("Data Booking", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Colors.transparent,
+        title: const Text("Data Booking", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        flexibleSpace: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.2)),
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(20),
@@ -65,15 +59,22 @@ class AdminBookingsReportScreen extends StatelessWidget {
   }
 
   Widget _buildBookingCard(Booking booking) {
-    Color statusColor = booking.statusPembayaran == "Lunas" ? Colors.greenAccent : Colors.orangeAccent;
+    Color statusColor = booking.statusPembayaran == "Lunas" ? Colors.green : Colors.orange;
     
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.black12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,10 +82,10 @@ class AdminBookingsReportScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(booking.namaPenyewa, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+              Text(booking.namaPenyewa, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 18)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: statusColor.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
                 child: Text(booking.statusPembayaran, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold)),
               ),
             ],
@@ -92,27 +93,27 @@ class AdminBookingsReportScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              const Icon(Icons.meeting_room, color: Color(0xFFDAA520), size: 16),
+              const Icon(Icons.meeting_room, color: Color(0xFFF58220), size: 16),
               const SizedBox(width: 8),
-              Text(booking.nomorKamar, style: const TextStyle(color: Colors.white70)),
+              Text(booking.nomorKamar, style: const TextStyle(color: Colors.black54)),
             ],
           ),
           const SizedBox(height: 5),
           Row(
             children: [
-              const Icon(Icons.calendar_today, color: Colors.white54, size: 14),
+              const Icon(Icons.calendar_today, color: Colors.black38, size: 14),
               const SizedBox(width: 8),
-              Text("${booking.tanggal.day}/${booking.tanggal.month}/${booking.tanggal.year}", style: const TextStyle(color: Colors.white54, fontSize: 12)),
+              Text("${booking.tanggal.day}/${booking.tanggal.month}/${booking.tanggal.year}", style: const TextStyle(color: Colors.black38, fontSize: 12)),
               const Spacer(),
-              Text("Rp ${booking.nominalBayar.toInt()}", style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.bold)),
+              Text("Rp ${booking.nominalBayar.toInt()}", style: const TextStyle(color: Color(0xFFF58220), fontWeight: FontWeight.bold)),
             ],
           ),
-          const Divider(color: Colors.white10, height: 25),
+          const Divider(color: Colors.black12, height: 25),
           Row(
             children: [
-              Text("Durasi: ${booking.durasi} Bulan", style: const TextStyle(color: Colors.white60, fontSize: 13)),
+              Text("Durasi: ${booking.durasi} Bulan", style: const TextStyle(color: Colors.black54, fontSize: 13)),
               const Spacer(),
-              Text(booking.tipePembayaran, style: const TextStyle(color: Colors.white60, fontSize: 13)),
+              Text(booking.tipePembayaran, style: const TextStyle(color: Colors.black54, fontSize: 13)),
             ],
           )
         ],

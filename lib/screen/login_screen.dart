@@ -42,8 +42,8 @@ class _LoginPageState extends State<LoginPage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  const Color(0xFF0F172A).withOpacity(0.4), // Dark Slate
-                  const Color(0xFF1E293B).withOpacity(0.7),
+                  Colors.white.withOpacity(0.4), 
+                  Colors.white.withOpacity(0.7),
                 ],
               ),
             ),
@@ -59,12 +59,12 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     padding: const EdgeInsets.all(30),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withOpacity(0.6),
                       borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white.withOpacity(0.2)),
+                      border: Border.all(color: Colors.black12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withOpacity(0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -78,14 +78,14 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                             fontSize: 42,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.black87,
                             letterSpacing: 2,
                           ),
                         ),
                         const SizedBox(height: 10),
                         const Text(
                           "Modern Living Experience",
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                          style: TextStyle(color: Colors.black54, fontSize: 16),
                         ),
                         const SizedBox(height: 30),
                         
@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () => Navigator.push(context, SlideRoute(page: const ForgotPasswordPage())),
-                            child: const Text("Lupa Password?", style: TextStyle(color: Color(0xFFDAA520))),
+                            child: const Text("Lupa Password?", style: TextStyle(color: Color(0xFFF58220))),
                           ),
                         ),
                         
@@ -111,10 +111,10 @@ class _LoginPageState extends State<LoginPage> {
                           height: 55,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFDAA520), // Goldenrod
+                              backgroundColor: const Color(0xFFF58220), // Orange
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                               elevation: 10,
-                              shadowColor: const Color(0xFFDAA520).withOpacity(0.5),
+                              shadowColor: const Color(0xFFF58220).withOpacity(0.5),
                             ),
                             onPressed: () {
                               if (_isAdmin) {
@@ -142,12 +142,12 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Belum punya akun? ", style: TextStyle(color: Colors.white70)),
+                            const Text("Belum punya akun? ", style: TextStyle(color: Colors.black54)),
                             GestureDetector(
                               onTap: () => Navigator.push(context, SlideRoute(page: const RegisterPage())),
                               child: const Text(
                                 "Daftar Sekarang",
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFDAA520)),
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF58220)),
                               ),
                             ),
                           ],
@@ -168,9 +168,9 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.white.withOpacity(0.4),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.black12),
       ),
       child: Row(
         children: [
@@ -189,11 +189,11 @@ class _LoginPageState extends State<LoginPage> {
           duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFDAA520) : Colors.transparent,
+            color: isSelected ? const Color(0xFFF58220) : Colors.transparent,
             borderRadius: BorderRadius.circular(15),
             boxShadow: isSelected ? [
               BoxShadow(
-                color: const Color(0xFFDAA520).withOpacity(0.3),
+                color: const Color(0xFFF58220).withOpacity(0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               )
@@ -203,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               title,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white70,
+                color: isSelected ? Colors.white : Colors.black54,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 14,
               ),
@@ -217,21 +217,21 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildTextField(IconData icon, String label, {bool isObscure = false}) {
     return TextField(
       obscureText: isObscure,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black87),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.white70),
+        prefixIcon: Icon(icon, color: Colors.black54),
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.black54),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+          borderSide: const BorderSide(color: Colors.black12),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Color(0xFFDAA520), width: 2), // Goldenrod
+          borderSide: const BorderSide(color: Color(0xFFF58220), width: 2), // Orange
         ),
         filled: true,
-        fillColor: Colors.black.withOpacity(0.2),
+        fillColor: Colors.white.withOpacity(0.4),
       ),
     );
   }

@@ -4,6 +4,13 @@ import '../model/sobatkos_models.dart';
 import '../service/api_service.dart';
 import 'payment_screen.dart';
 
+class Voucher {
+  final String nama;
+  final double diskon;
+
+  Voucher(this.nama, this.diskon);
+}
+
 class BookingPage extends StatefulWidget {
   final Room room;
   const BookingPage({Key? key, required this.room}) : super(key: key);
@@ -15,26 +22,40 @@ class BookingPage extends StatefulWidget {
 class _BookingPageState extends State<BookingPage> {
   int _durasi = 1;
   String _tipeBayar = "Lunas";
+  Voucher? _selectedVoucher;
+
+  final List<Voucher> _vouchers = [
+    Voucher("Weekend Diskon 10%", 0.1),
+    Voucher("Promo Mahasiswa Baru 15%", 0.15),
+    Voucher("Cashback Kemerdekaan 20%", 0.20),
+  ];
 
   @override
   Widget build(BuildContext context) {
     double totalSewa = widget.room.harga * _durasi;
-    double harusBayar = (_tipeBayar == "DP") ? totalSewa * 0.2 : totalSewa;
+    
+    double diskonNominal = 0.0;
+    if (_selectedVoucher != null) {
+      diskonNominal = totalSewa * _selectedVoucher!.diskon;
+    }
+    double totalSetelahDiskon = totalSewa - diskonNominal;
+
+    double harusBayar = (_tipeBayar == "DP") ? totalSetelahDiskon * 0.2 : totalSetelahDiskon;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text("Konfirmasi Booking", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("Konfirmasi Booking", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         flexibleSpace: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.2)),
+            child: Container(color: Colors.white.withOpacity(0.4)),
           ),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: Column(
         children: [
@@ -46,9 +67,9 @@ class _BookingPageState extends State<BookingPage> {
                 Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withOpacity(0.6),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    border: Border.all(color: Colors.black12),
                   ),
                   child: Row(
                     children: [
@@ -77,12 +98,12 @@ class _BookingPageState extends State<BookingPage> {
                           children: [
                             Text(
                               "Kamar ${widget.room.nomorKamar}",
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                             ),
                             const SizedBox(height: 5),
                             Text(
                               "Rp ${widget.room.harga.toStringAsFixed(0)} / bulan",
-                              style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.w600),
+                              style: const TextStyle(color: Color(0xFFF58220), fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -94,7 +115,7 @@ class _BookingPageState extends State<BookingPage> {
 
                 const Text(
                   "DETAIL PENYEWAAN",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white70, letterSpacing: 1.2),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black54, letterSpacing: 1.2),
                 ),
                 const SizedBox(height: 20),
 
@@ -102,14 +123,14 @@ class _BookingPageState extends State<BookingPage> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    border: Border.all(color: Colors.black12),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Durasi Sewa", style: TextStyle(color: Colors.white70, fontSize: 14)),
+                      const Text("Durasi Sewa", style: TextStyle(color: Colors.black54, fontSize: 14)),
                       const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +140,7 @@ class _BookingPageState extends State<BookingPage> {
                           }),
                           Text(
                             "$_durasi Bulan",
-                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
                           ),
                           _durationButton(Icons.add, () {
                             setState(() => _durasi++);
@@ -131,7 +152,7 @@ class _BookingPageState extends State<BookingPage> {
                 ),
                 const SizedBox(height: 25),
 
-                const Text("METODE PEMBAYARAN", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                const Text("METODE PEMBAYARAN", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                 const SizedBox(height: 15),
                 Row(
                   children: [
@@ -140,19 +161,60 @@ class _BookingPageState extends State<BookingPage> {
                     Expanded(child: _payTypeCard("DP", "DP 20%", Icons.account_balance_wallet_outlined)),
                   ],
                 ),
+                const SizedBox(height: 35),
+
+                const Text("VOUCHER DISKON", style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.black12),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<Voucher>(
+                      isExpanded: true,
+                      hint: const Text("Pilih Voucher (Opsional)", style: TextStyle(color: Colors.black54)),
+                      value: _selectedVoucher,
+                      icon: const Icon(Icons.arrow_drop_down, color: Colors.black54),
+                      items: [
+                        const DropdownMenuItem<Voucher>(
+                          value: null,
+                          child: Text("Tidak ada", style: TextStyle(color: Colors.black87)),
+                        ),
+                        ..._vouchers.map((Voucher v) {
+                          return DropdownMenuItem<Voucher>(
+                            value: v,
+                            child: Text(v.nama, style: const TextStyle(color: Colors.black87)),
+                          );
+                        }),
+                      ],
+                      onChanged: (Voucher? newValue) {
+                        setState(() {
+                          _selectedVoucher = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 40),
 
                 // Summary Card (Premium Glass)
                 Container(
                   padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDAA520).withOpacity(0.1),
+                    color: const Color(0xFFF58220).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: const Color(0xFFDAA520).withOpacity(0.2)),
+                    border: Border.all(color: const Color(0xFFF58220).withOpacity(0.2)),
                   ),
                   child: Column(
                     children: [
                       _summaryRow("Total Sewa", "Rp ${totalSewa.toStringAsFixed(0)}", false),
+                      if (_selectedVoucher != null) ...[
+                        const SizedBox(height: 10),
+                        _summaryRow("Diskon (${(_selectedVoucher!.diskon * 100).toStringAsFixed(0)}%)", "- Rp ${diskonNominal.toStringAsFixed(0)}", false, color: Colors.red),
+                      ],
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 15),
                         child: Divider(color: Colors.white10),
@@ -184,10 +246,10 @@ class _BookingPageState extends State<BookingPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFDAA520),
+                  backgroundColor: const Color(0xFFF58220),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 8,
-                  shadowColor: const Color(0xFFDAA520).withOpacity(0.4),
+                  shadowColor: const Color(0xFFF58220).withOpacity(0.4),
                 ),
                 child: const Text(
                   "KONFIRMASI BOOKING",
@@ -208,10 +270,11 @@ class _BookingPageState extends State<BookingPage> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withOpacity(0.4),
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.black12),
         ),
-        child: Icon(icon, color: Colors.white, size: 24),
+        child: Icon(icon, color: Colors.black87, size: 24),
       ),
     );
   }
@@ -223,32 +286,32 @@ class _BookingPageState extends State<BookingPage> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFDAA520).withOpacity(0.2) : Colors.white.withOpacity(0.05),
+          color: isSelected ? const Color(0xFFF58220).withOpacity(0.1) : Colors.white.withOpacity(0.4),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? const Color(0xFFDAA520) : Colors.white.withOpacity(0.1), width: 1.5),
+          border: Border.all(color: isSelected ? const Color(0xFFF58220) : Colors.black12, width: 1.5),
         ),
         child: Column(
           children: [
-            Icon(icon, color: isSelected ? const Color(0xFFDAA520) : Colors.white60, size: 28),
+            Icon(icon, color: isSelected ? const Color(0xFFF58220) : Colors.black38, size: 28),
             const SizedBox(height: 12),
-            Text(type, style: TextStyle(fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.white70, fontSize: 16)),
+            Text(type, style: TextStyle(fontWeight: FontWeight.bold, color: isSelected ? Colors.black87 : Colors.black54, fontSize: 16)),
             const SizedBox(height: 4),
-            Text(sub, style: TextStyle(fontSize: 10, color: isSelected ? const Color(0xFFDAA520) : Colors.white54)),
+            Text(sub, style: TextStyle(fontSize: 10, color: isSelected ? const Color(0xFFF58220) : Colors.black38)),
           ],
         ),
       ),
     );
   }
 
-  Widget _summaryRow(String label, String value, bool isTotal) {
+  Widget _summaryRow(String label, String value, bool isTotal, {Color? color}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: isTotal ? 16 : 14, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, color: Colors.white70)),
+        Text(label, style: TextStyle(fontSize: isTotal ? 16 : 14, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal, color: Colors.black54)),
         Text(value, style: TextStyle(
           fontSize: isTotal ? 20 : 16, 
           fontWeight: FontWeight.bold, 
-          color: isTotal ? const Color(0xFFDAA520) : Colors.white,
+          color: color ?? (isTotal ? const Color(0xFFF58220) : Colors.black87),
         )),
       ],
     );

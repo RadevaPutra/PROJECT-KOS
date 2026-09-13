@@ -35,12 +35,12 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: AlertDialog(
-          backgroundColor: const Color(0xFF1E293B).withOpacity(0.9),
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20), 
-            side: const BorderSide(color: Colors.white10),
+            side: const BorderSide(color: Colors.black12),
           ),
-          title: const Text("Tambah Kamar Baru", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          title: const Text("Tambah Kamar Baru", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -56,10 +56,10 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Batal", style: TextStyle(color: Colors.white70)),
+              child: const Text("Batal", style: TextStyle(color: Colors.black54)),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFDAA520)),
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF58220)),
               onPressed: () {
                 if (nameController.text.isNotEmpty && priceController.text.isNotEmpty) {
                   final newRoom = Room(
@@ -78,7 +78,7 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
                   );
                 }
               },
-              child: const Text("Simpan", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              child: const Text("Simpan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -94,20 +94,20 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: AlertDialog(
-          backgroundColor: const Color(0xFF1E293B).withOpacity(0.9),
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20), 
-            side: const BorderSide(color: Colors.white10),
+            side: const BorderSide(color: Colors.black12),
           ),
-          title: Text("Edit Harga - ${room.nomorKamar}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+          title: Text("Edit Harga - ${room.nomorKamar}", style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 18)),
           content: _buildDialogField(priceController, "Harga Baru (Rp)", Icons.payments, isNumber: true),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Batal", style: TextStyle(color: Colors.white70)),
+              child: const Text("Batal", style: TextStyle(color: Colors.black54)),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFDAA520)),
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2563EB)),
               onPressed: () {
                 if (priceController.text.isNotEmpty) {
                   RoomService.updateRoomPrice(room.id, double.parse(priceController.text));
@@ -118,7 +118,7 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
                   );
                 }
               },
-              child: const Text("Update", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              child: const Text("Update", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -130,11 +130,11 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E293B),
-        title: const Text("Hapus Kamar?", style: TextStyle(color: Colors.white)),
-        content: Text("Apakah Anda yakin ingin menghapus ${room.nomorKamar}?", style: const TextStyle(color: Colors.white70)),
+        backgroundColor: Colors.white,
+        title: const Text("Hapus Kamar?", style: TextStyle(color: Colors.black87)),
+        content: Text("Apakah Anda yakin ingin menghapus ${room.nomorKamar}?", style: const TextStyle(color: Colors.black54)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Batal")),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Batal", style: TextStyle(color: Colors.black54))),
           TextButton(
             onPressed: () {
               RoomService.deleteRoom(room.id);
@@ -156,15 +156,15 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       maxLines: maxLines,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white60),
-        prefixIcon: Icon(icon, color: const Color(0xFFDAA520)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.white10)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFDAA520))),
+        labelStyle: const TextStyle(color: Colors.black54),
+        prefixIcon: Icon(icon, color: const Color(0xFFF58220)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFF58220))),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
+        fillColor: const Color(0xFFF8F9FA),
       ),
     );
   }
@@ -172,28 +172,22 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text("Kelola Kamar", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Colors.transparent,
+        title: const Text("Kelola Kamar", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        flexibleSpace: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.2)),
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: rooms.isEmpty
-          ? Center(
+          ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.meeting_room_outlined, size: 80, color: Colors.white24),
-                  const SizedBox(height: 15),
-                  const Text("Belum ada data kamar", style: TextStyle(color: Colors.white54, fontSize: 16)),
+                  Icon(Icons.meeting_room_outlined, size: 80, color: Colors.black12),
+                  SizedBox(height: 15),
+                  Text("Belum ada data kamar", style: TextStyle(color: Colors.black54, fontSize: 16)),
                 ],
               ),
             )
@@ -206,9 +200,9 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
               },
             ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFFDAA520),
+        backgroundColor: const Color(0xFFF58220),
         onPressed: _showAddRoomDialog,
-        child: const Icon(Icons.add, color: Colors.black, size: 30),
+        child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
     );
   }
@@ -218,9 +212,16 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.black12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Row(
         children: [
@@ -233,14 +234,14 @@ class _AdminManageRoomsScreenState extends State<AdminManageRoomsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(room.nomorKamar, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(room.nomorKamar, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 16)),
                 const SizedBox(height: 5),
-                Text("Rp ${room.harga.toInt()}", style: const TextStyle(color: Color(0xFFDAA520), fontWeight: FontWeight.w600)),
+                Text("Rp ${room.harga.toInt()}", style: const TextStyle(color: Color(0xFFF58220), fontWeight: FontWeight.w600)),
                 const SizedBox(height: 5),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(color: Colors.green.withOpacity(0.2), borderRadius: BorderRadius.circular(5)),
-                  child: Text(room.status, style: const TextStyle(color: Colors.greenAccent, fontSize: 10)),
+                  decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                  child: Text(room.status, style: const TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
